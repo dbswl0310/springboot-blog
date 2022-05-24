@@ -33,10 +33,53 @@ public class DummyControllerTest {
 	// @Autowired의 의미 -> DummyControllerTest가 메모리에 띄워질 때, UserRepository도 메모리에 띄워진다.
 	private UserRepository userRepository; 
 	
+	@DeleteMapping("/dummy/user/{id}")
+	public String delete(@PathVariable int id) {
+		userRepository.deleteById(id);
+		try {
+			userRepository.deleteById(id);
+		} catch (EmptyResultDataAccessException e){
+			return "삭제에 실패하였습니다. 해당 아이디는 DB에 존재하지 않습니다.";
+		}
+		return "삭제되었습니다. id : " + id;
+	}
+	
+	// save함수는 id를 전달하지 않으면 insert를 해주고
+	// save함수는 id를 전달하여 해당 데이터가 존재하면 update를 해주고
+	// save함수는 id를 전달하여 해당 데이터가 존재하지 않는 경우 insert를 한다. (없는 값은 null값으로 한다.)
+	@Transactional // 함수 종료시에 자동 commit이 됨.
+	@PutMapping("/dummy/user/{id}")
+	public User updateUser(@PathVariable int id, @RequestBody User requestUser) {
+		System.err.println("id : " + id);
+		System.err.println("password : " + requestUser.getPassword());
+		System.err.println("email : " + requestUser.getEmail());
+		
+		// id로 user를 찾는다.
+		// id가 없으면 Exception을 표시한다.
+		User user = userRepository.findById(id).orElseThrow(() ->{
+			return new IllegalArgumentException("수정에 실패하였습니다. ");
+		});
+		
+		// set메서드를 통해 값이 변경되면 @@Transactional이 더티체킹 하여
+		// 트랜잭션이 종료될 때 변경을 감지한다. 
+		// 그 다음 데이터베이스에 수정(update)를 날려준다.
+		// 그래서 굳이 userRepository.save(user); 를 안해줘도 된다.
+		user.setPassword(requestUser.getPassword());
+		user.setEmail(requestUser.getEmail());
+		
+		//userRepository.save(user);
+		
+		// 더티 체킹 -> @Transactional 어노테이션을 붙이면!
+		
+		return user;
+		
+	}
+	
 	@GetMapping("/dummy/users")
 	public List<User> list() {
 		return userRepository.findAll();
 	}
+	
 	
 	// 한페이지당 2건에 데이터를 리턴받아 볼 예정
 		@GetMapping("/dummy/user")
