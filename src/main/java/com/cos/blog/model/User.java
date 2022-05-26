@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor // 모든 값을 null
 @Builder //빌더 패턴
 
 public class User {
@@ -31,7 +31,7 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@Column(nullable = false, length = 30)
+	@Column(unique = true, nullable = false, length = 30)
 	private String username;
 	
 	@Column(nullable = false, length = 100)
@@ -47,4 +47,7 @@ public class User {
 	@CreationTimestamp // 시간이 자동입력
 	private Timestamp createDate;
 
+	
+	
+	
 }
