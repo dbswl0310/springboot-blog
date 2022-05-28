@@ -20,16 +20,13 @@ public class UserApiController {
 	@Autowired
 	private UserService userService;
 	
-	
+	@Autowired
+	private BCryptPasswordEncoder encode;
 	
 	@PostMapping("/auth/joinProc")
 	public ResponseDto<Integer> save(@RequestBody User user) { // username, email, password만 받는데?? -> 
 		System.out.println("UserApplication :  save 호출됨");
-		
-		
 		userService.회원가입(user);
-		
 		return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
-		
 	}
 }

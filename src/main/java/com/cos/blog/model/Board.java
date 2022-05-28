@@ -40,7 +40,6 @@ public class Board {
 	@Lob // 대용량 취급할 때 사용한다..
 	private String content;
 	
-	@ColumnDefault("0")
 	private int count;
 	
 	// 데이터베이스는 오브젝트를 저장할 수 없다. -> fk키 사용
