@@ -9,10 +9,12 @@
 			<input type="text"  value="${principal.user.username }"class="form-control" placeholder="Enter username" id="username" readonly>
 		</div>
 		
-		<div class="form-group">
-			<label for="pwd">Password</label> 
-			<input type="password"  class="form-control" placeholder="Enter password" id="password">
+		<c:if test="${not empty principal.user.oauth }">
+			<div class="form-group">
+				<label for="pwd">Password</label> 
+				<input type="password"  class="form-control" placeholder="Enter password" id="password">
 		</div>
+		</c:if>
 		
 		<div class="form-group">
 			<label for="email">Email</label> 
